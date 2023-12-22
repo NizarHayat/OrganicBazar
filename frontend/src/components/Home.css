@@ -1,0 +1,27 @@
+.stylish-input-group {
+    width: 30%;
+   
+    margin: auto;
+  }
+  
+  .stylish-input-group .form-control {
+    /* border: 0; */
+    /* padding: 15px; */
+    border-radius: 10px;
+
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .stylish-input-group .input-group-addon {
+    background: transparent;
+    border: 0;
+    
+    padding: 0;
+  }
+  
+  .stylish-input-group .btn-icon {
+    border-radius: 10px;
+   
+  }
+
+  
