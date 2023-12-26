@@ -6,6 +6,10 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const adminRoute=require("./routes/index.route")
 
+require('dotenv').config();
+
+
+
 
 connectDb();
 

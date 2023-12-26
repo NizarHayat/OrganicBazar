@@ -23,6 +23,11 @@ const userSchema = mongoose.Schema(
         },
         resetOtp:{
             type: String
+        },
+        role: {
+               type: String,
+               enum: ["admin", "manager", "hr", "customer"],
+               default: "customer"
         }
    
     },

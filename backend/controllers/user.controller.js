@@ -2,7 +2,8 @@ const User = require("../models/user.model");
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
-const crypto = require("crypto")
+const crypto = require("crypto");
+const { userInfo } = require("os");
 const SECRET_KEY = 'SECRET_KEY';
 
 exports.forgotPassword = async (req, res) => {
@@ -77,7 +78,7 @@ exports.store = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
-
+// login 
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -90,14 +91,16 @@ exports.login = async (req, res) => {
     const passwordMatch = await bcrypt.compare(password, findUser.password);
 
     if (passwordMatch) {
-      const payload = { userId: findUser._id, email: findUser.email };
-      jwt.sign(payload, SECRET_KEY, { expiresIn: 600 }, (err, token) => {
+      const payload = { userId: findUser._id, email: findUser.email, role: findUser.role }; // Use findUser.role instead of User.role
+      jwt.sign(payload, process.env.PRIVATE_KEY, { expiresIn: '1h' }, (err, token) => {
         if (err) {
-          return res.status(500).json({ message: "Internal server error" });
-        } else {
-          res.status(200).json({ message: "User signed in successfully", token });
+          console.error('Error generating token:', err);
+          return res.status(500).json({ message: 'Failed to generate token' });
         }
+        // Handle successful token generation
+        res.status(200).json({ message: 'Token generated successfully', token });
       });
+      
     } else {
       res.status(401).json({ message: "Incorrect password" });
     }
@@ -107,23 +110,44 @@ exports.login = async (req, res) => {
   }
 };
 
+
 // Get all users
+
 exports.getAllUsers = async (req, res) => {
   try {
-    const allUsers = await User.find();
+    const allUsers = await User.find(); // Fetch all users from the database
+
     if (!allUsers || allUsers.length === 0) {
-      return res.status(404).json({
-        message: "No users found"
-      });
+      return res.status(404).json({ message: "No users found" });
     }
+
     res.status(200).json(allUsers);
   } catch (error) {
     console.error(error);
-    res.status(500).json({
-      message: "Server error"
-    });
+    res.status(500).json({ message: "Server error" });
   }
 };
+
+
+
+
+
+// exports.getAllUsers = async (req, res) => {
+//   try {
+//     const allUsers = await User.find();
+//     if (!allUsers || allUsers.length === 0) {
+//       return res.status(404).json({
+//         message: "No users found"
+//       });
+//     }
+//     res.status(200).json(allUsers);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({
+//       message: "Server error"
+//     });
+//   }
+// };
 
 
 // // get single user
