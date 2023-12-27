@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const controller = require('../controllers/contact.controller')
+const controller = require('../controllers/contact.controller.js')
 
 
 router.post("/", controller.store)
