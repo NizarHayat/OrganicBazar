@@ -1,7 +1,6 @@
-// controllers/image.controller.js
 const fs = require('fs');
 const path = require('path');
-const Image = require('../models/image.model');
+const Image = require('../models/image.model.js');
 
 exports.uploadImage = async (req, res) => {
   try {

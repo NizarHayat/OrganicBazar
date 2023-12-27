@@ -1,8 +1,9 @@
-const User = require("../models/user.model");
+const User = require("../models/user.model.js");
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
-const crypto = require("crypto")
+const crypto = require("crypto");
+const { userInfo } = require("os");
 const SECRET_KEY = 'SECRET_KEY';
 
 exports.forgotPassword = async (req, res) => {
@@ -84,7 +85,7 @@ exports.store = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
-
+// login 
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -97,14 +98,16 @@ exports.login = async (req, res) => {
     const passwordMatch = await bcrypt.compare(password, findUser.password);
 
     if (passwordMatch) {
-      const payload = { userId: findUser._id, email: findUser.email };
-      jwt.sign(payload, SECRET_KEY, { expiresIn: 600 }, (err, token) => {
+      const payload = { userId: findUser._id, email: findUser.email, role: findUser.role }; // Use findUser.role instead of User.role
+      jwt.sign(payload, process.env.PRIVATE_KEY, { expiresIn: '1h' }, (err, token) => {
         if (err) {
-          return res.status(500).json({ message: "Internal server error" });
-        } else {
-          res.status(200).json({ message: "User signed in successfully", token });
+          console.error('Error generating token:', err);
+          return res.status(500).json({ message: 'Failed to generate token' });
         }
+        // Handle successful token generation
+        res.status(200).json({ message: 'Token generated successfully', token });
       });
+      
     } else {
       res.status(401).json({ message: "Incorrect password" });
     }
@@ -113,87 +116,100 @@ exports.login = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+//Admin Route Handler
+exports.adminRouteHandler = (req, res) => {
+  res.json({ message: "Welcome to Admin Panel!"});
+};
+
 
 // Get all users
+
 exports.getAllUsers = async (req, res) => {
+  console.log("all users");
   try {
-    const allUsers = await User.find();
+    const allUsers = await User.find(); // Fetch all users from the database
+
     if (!allUsers || allUsers.length === 0) {
-      return res.status(404).json({
-        message: "No users found"
-      });
+
+      return res.status(404).json({ message: "No users found" });
     }
+
     res.status(200).json(allUsers);
   } catch (error) {
     console.error(error);
-    res.status(500).json({
-      message: "Server error"
-    });
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// Get Single User
+exports.getSingleUser = async (req, res) => {
+  try {
+    const {id} = req.params;
+    const getSingleUser = await User.findById(id)
+    if(!getSingleUser) {
+      return res.status(404).json({ message: "User not found"});
+    }
+    res.status(200).json(getSingleUser);
+  } catch (error) {
+    res.status(500).json({ message: error.message});
+  }
+}
+
+
+
+// exports.getSingleUser = async (req, res) => {
+//   try {
+//     const userId = req.params.id;
+//     const user = await User.findById(userId);
+//     if(!user){
+//       return res.status(404).json({message: "User not Found"});
+//     }
+//     res.status(200).json(user);
+
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: "Server Error"});
+    
+//   }
+// };
+
+// Update user
+exports.updateUserById = async (req, res) => {
+  try {
+    const userId = req.params.id; // Assuming the user ID is passed as a parameter in the URL
+    const updateData = req.body; // Data to update the user (assuming it's sent in the request body)
+
+    const updatedUser = await User.findByIdAndUpdate(userId, updateData, { new: true });
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json(updatedUser); // Return the updated user
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+// Delete a user 
+exports.deleteUserById = async (req, res) => {
+  try {
+    const userId = req.params.id; // Assuming the user ID is passed as a parameter in the URL
+
+    const deletedUser = await User.findByIdAndDelete(userId);
+
+    if (!deletedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ message: "User deleted successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
 
-// // get single user
-
-// export const getSingleUser = async (req, res) => {
-//     try {
-//         const userId = req.params.id;
-//         const singleUser = await User.findOne({ _id: userId });
-//         if (!singleUser) {
-//             return res.status(404).json({
-//                 message: `User with this ${userId} not found`
-//             });
-//         }
-//         res.status(200).json({
-//             data: singleUser
-//         });
-//     } catch (error) {
-//         console.error("Error fetching user:", error);
-//         res.status(500).json({
-//             message: "Internal Server Error"
-//         });
-//     }
-// };
 
 
-// // Delete a user
-
-// export const removeUser = async (req, res) => {
-//     try {
-//         const userId = req.params.id;
-//         const removedUser = await User.deleteOne({ _id: userId });
-//         res.status(201).json({
-//             message: 'user deleted',
-//         })
-//     } catch (error) {
-//         console.error("Error fetching user:", error);
-//         res.status(500).json({
-//             message: "Internal Server Error"
-//         });
-//     }
-// }
-
-
-// // Update an existing user
-
-// export const updateUser = async (req, res) => {
-//     try {
-//         const userId = req.params.id;
-//         const userDetails = req.body;
-//         const updatedUser = await User.findByIdAndUpdate(userId, userDetails);
-//         if (!updatedUser) {
-//             return res.status(401).json({
-//                 messege: "User not found"
-//             })
-//         }
-//         res.status(201).json({
-//             message: 'User Updated Successfully',
-//             updatedUser
-//         })
-//     } catch (error) {
-//         console.error("Error fetching user:", error);
-//         res.status(500).json({
-//             message: "Internal Server Error"
-//         });
-//     }
-// }
