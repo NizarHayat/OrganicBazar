@@ -22,13 +22,10 @@ const Login = () => {
       const { data, status } = response;
   
       if (status === 200) {
-   
-       console.log("Hurrah!! Login Successful");
+        console.log("Hurrah!! Login Successful");
         localStorage.setItem('accessToken', data.token);
         navigate('/dashboard');
-        
       } else {
-   
         toast.error('Login failed: ' + data.message); 
       }
   
@@ -40,15 +37,16 @@ const Login = () => {
       toast.error('Incorrect email or password');
     }
   };
-  
-  
 
+  const redirectToForgotPassword = () => {
+    navigate('/forgotpassword');
+  };
+  
   const { email, password } = formData;
 
   return (
     <div className="container">
       <div className="row">
-    
         <div className="col-6">
           <div className="image-container">
             <img
@@ -62,11 +60,10 @@ const Login = () => {
         </div>
   
         <div className="col-6 d-flex align-items-center justify-content-center">
-          
           <form className="form-container" onSubmit={onSubmit}>
-          <h2>Log in to Organic Bazaar</h2>
-          <p className='mt-2'>Enter your details below</p>
-            <div className="mb-3 ">
+            <h2>Log in to Organic Bazaar</h2>
+            <p className='mt-2'>Enter your details below</p>
+            <div className="mb-3">
               <label htmlFor="exampleFormControlInput1" className="form-label">
                 Email:
               </label>
@@ -92,9 +89,12 @@ const Login = () => {
                 onChange={onChange}
                 id="exampleFormControlTextarea1"
                 rows="3"
+                placeholder="Password"
               />
             </div>
-            <button className="btn btn-primary btn-dark">Log In</button>
+            <button className="btn btn-primary btn-dark" style={{ width: '100%' }}>Log In</button>
+            <button className="btn btn-primary mt-2" onClick={redirectToForgotPassword} style={{ width: '100%' }}>Forgotten Password?</button>
+            <a href='/signup'>Signup</a>
           </form>
         </div>
       </div>

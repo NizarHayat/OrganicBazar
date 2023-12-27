@@ -19,15 +19,21 @@ exports.forgotPassword = async (req, res) => {
         }
       });
 
-      const otp = crypto.randomBytes(3).toString('hex')
+      const otp = crypto.randomBytes(3).toString('hex');
+
+      // Save the OTP in the user model (assuming you have a field named resetOtp)
+      user.resetOtp = otp;
+      await user.save();
+
       const mailOptions = {
         from: "nizarhayat351@gmail.com",
         to: email, 
-        subject: `Your OTP for Password Reset is ${otp}`,
-        text: `Your OTP is ${otp}`
-      }
+        subject: `Your OTP for Password Reset`,
+        text: `Your OTP is: ${otp}. This OTP is valid for a short period.`
+      };
 
-      transporter.sendMail(mailOptions);
+      // Send mail and wait for it to complete
+      await transporter.sendMail(mailOptions);
 
       res.status(200).json({ message: "Password reset email sent successfully" });
     } else {
@@ -38,6 +44,7 @@ exports.forgotPassword = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
 
 exports.verifyOtp = async (req, res) => {
   try {

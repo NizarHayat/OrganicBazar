@@ -12,6 +12,7 @@ import EmailTemp from './components/EmailTemp';
 import Footer from './components/Footer';
 import Todo from './components/Todo';
 import Counter from './components/Counter';
+import ForgotPassword from './components/forgotPassword';
 
 function App() {
     return (
@@ -29,6 +30,7 @@ function App() {
                 <Route path='/about' element={<About/>}/>
                 <Route path='/Todo' element={<Todo/>}/>
                 <Route path='/Counter' element={<Counter/>}/>
+                <Route path='/forgotPassword' element={<ForgotPassword/>}/>
             </Routes>
             <Footer />
         </>
