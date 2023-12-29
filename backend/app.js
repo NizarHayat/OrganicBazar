@@ -1,12 +1,15 @@
 const express = require('express');
 const app = express();
-const PORT = 3001;
 const connectDb = require("./config/connectDb.js");
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const adminRoute=require("./routes/index.route.js")
 
+
+
 require('dotenv').config();
+// Accessing enviroment variables from env file.
+const PORT = process.env.PORT || 3000;
 
 
 
