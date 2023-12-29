@@ -78,17 +78,24 @@ exports.updateCartItemQuantity = async (req, res) => {
 // Remove cart item 
 
 exports.removeItemFromCart = async (req, res) => {
+  console.log('Removing');
   const { userId, productId } = req.params;
 
   try {
+     console.log('Recieved userId', userId);
+     console.log('Recieved productId', productId);
+
     const cart = await Cart.findOne({ userId });
+     console.log('Retrieved cart', cart);
 
     if (!cart) {
       return res.status(404).json({ message: 'Cart not found' });
     }
-
-    cart.items = cart.items.filter(item => item.productId !== productId);
-    await cart.save();
+      console.log('Items bfore filter:', cart.items);
+      cart.items = cart.items.filter(item => item.productId !== productId);
+     console.log('Items after filter:', cart.items);
+      await cart.save();
+     console.log('Cart saved', cart);
 
     res.status(200).json({ message: 'Item removed from cart successfully' });
   } catch (error) {
