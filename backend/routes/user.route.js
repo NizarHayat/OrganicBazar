@@ -5,8 +5,8 @@ const authenticateWithToken = require("../middleware/authMiddleware.js");
 const roleMiddleware = require("../middleware/roleMiddleware.js");
 
 
-router.post("/", controller.store);
-router.post("/login", controller.login);
+router.post("/api/user", controller.store);
+router.post("/api/user/login", controller.login);
 router.get("/users",authenticateWithToken,roleMiddleware,controller.getAllUsers);
 router.get("/user/:id", controller.getSingleUser)
 router.put("/user/:id", controller.updateUserById)
