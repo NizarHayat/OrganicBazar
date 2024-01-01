@@ -9,7 +9,7 @@ const adminRoute=require("./routes/index.route.js")
 
 require('dotenv').config();
 // Accessing enviroment variables from env file.
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 
 

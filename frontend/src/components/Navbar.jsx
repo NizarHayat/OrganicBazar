@@ -22,8 +22,8 @@ const Navbar = () => {
         </button>
 
         <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav ms-auto">
-            <li className="nav-item">
+          <ul className="navbar-nav mx-auto align-items-center">
+            <li className="nav-item ">
               <Link className="nav-link text-light" to="/">Home</Link>
             </li>
             <li className="nav-item">
@@ -38,12 +38,7 @@ const Navbar = () => {
             <li className="nav-item">
               <Link className="nav-link text-light" to="/Login">Login</Link>
             </li>
-            <li className="nav-item">
-              <Link className="nav-link text-light" to="/Todo">Todo</Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link text-light" to="/Counter">Count</Link>
-            </li>
+        
           </ul>
 
           <div className="d-flex align-items-center">

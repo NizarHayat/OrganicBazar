@@ -9,7 +9,7 @@ const cartRoute = require("../routes/cart.Route.js");
 
 
 router.use("/contact", contactRoute);
-router.use("/user", userRoute);
+router.use("/", userRoute);
 router.use("/email", emailRoute);
 router.use('/uploads', imageRoute);
 

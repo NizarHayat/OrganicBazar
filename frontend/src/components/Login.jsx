@@ -1,8 +1,10 @@
+
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
 const Login = () => {
   const [formData, setFormData] = useState({
     email: '',
@@ -18,17 +20,17 @@ const Login = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:3001/user/login', formData);
+      const response = await axios.post('http://localhost:3001/login', formData);
       const { data, status } = response;
-  
+
       if (status === 200) {
-        console.log("Hurrah!! Login Successful");
         localStorage.setItem('accessToken', data.token);
-        navigate('/dashboard');
+        toast.success('Login successful!');
+        navigate('/CustomerDashboard');
       } else {
-        toast.error('Login failed: ' + data.message); 
+        toast.error('Login failed: ' + data.message);
       }
-  
+
       setFormData({
         email: '',
         password: '',
@@ -41,7 +43,7 @@ const Login = () => {
   const redirectToForgotPassword = () => {
     navigate('/forgotpassword');
   };
-  
+
   const { email, password } = formData;
 
   return (

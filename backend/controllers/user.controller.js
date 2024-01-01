@@ -71,7 +71,7 @@ exports.verifyOtp = async (req, res) => {
   }
 };
 
-exports.store = async (req, res) => {
+exports.createUser = async (req, res) => {
   try {
     const payload = req.body;
     const saltRounds = 10;
@@ -86,6 +86,38 @@ exports.store = async (req, res) => {
   }
 };
 // login 
+// exports.login = async (req, res) => {
+//   try {
+//     const { email, password } = req.body;
+//     const findUser = await User.findOne({ email });
+
+//     if (!findUser) {
+//       return res.status(404).json({ message: "User not found" });
+//     }
+
+//     const passwordMatch = await bcrypt.compare(password, findUser.password);
+
+//     if (passwordMatch) {
+//       const payload = { userId: findUser._id, email: findUser.email, role: findUser.role }; // Use findUser.role instead of User.role
+//       jwt.sign(payload, process.env.PRIVATE_KEY, { expiresIn: '1h' }, (err, token) => {
+//         if (err) {
+//           console.error('Error generating token:', err);
+//           return res.status(500).json({ message: 'Failed to generate token' });
+//         }
+//         // Handle successful token generation
+//         res.status(200).json({ message: 'Token generated successfully', token });
+//       });
+      
+//     } else {
+//       res.status(401).json({ message: "Incorrect password" });
+//     }
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ message: "Internal server error" });
+//   }
+// };
+
+// login 
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -98,16 +130,25 @@ exports.login = async (req, res) => {
     const passwordMatch = await bcrypt.compare(password, findUser.password);
 
     if (passwordMatch) {
-      const payload = { userId: findUser._id, email: findUser.email, role: findUser.role }; // Use findUser.role instead of User.role
+      const payload = { userId: findUser._id, email: findUser.email, role: findUser.role };
       jwt.sign(payload, process.env.PRIVATE_KEY, { expiresIn: '1h' }, (err, token) => {
         if (err) {
           console.error('Error generating token:', err);
           return res.status(500).json({ message: 'Failed to generate token' });
         }
-        // Handle successful token generation
-        res.status(200).json({ message: 'Token generated successfully', token });
+
+        // Determine redirect URL based on user role
+        let redirectURL = '/';
+        if (findUser.role === 'admin') {
+          redirectURL = '/admindashboard';
+        } else if (findUser.role === 'customer') {
+          redirectURL = '/customerdashboard';
+        }
+
+        // Handle successful token generation with redirect URL
+        res.status(200).json({ message: 'Token generated successfully', token, redirectURL });
       });
-      
+
     } else {
       res.status(401).json({ message: "Incorrect password" });
     }
@@ -116,6 +157,7 @@ exports.login = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
 //Admin Route Handler
 exports.adminRouteHandler = (req, res) => {
   res.json({ message: "Welcome to Admin Panel!"});

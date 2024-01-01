@@ -3,7 +3,6 @@ import { Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './components/Home';
 import Contact from './components/Contact';
-import Admin from './components/Admin';
 import SignUp from './components/SignUp';
 import Login from './components/Login';
 import About from './components/About';
@@ -13,17 +12,28 @@ import Todo from './components/Todo';
 import Counter from './components/Counter';
 import ForgotPassword from './components/forgotPassword';
 import AddProduct from './components/AddProduct';
-import CustomerDashboard from './components/CustomerDashboard';
+import CustomerDashboard from './components/Dashboard/CustomerDashboard';
+import PrivateRoute from './PrivateRoute';
+import ProductDescription from './components/ProductDescription';
+import Users from './components/Users';
+import EditUser from './components/EditUser';
+import AdminDashboard from './components/Dashboard/AdminDashboard';
+
+
+
+
+
 
 
 function App() {
+  const isAuthenticated = !!localStorage.getItem('accessToken');
   return (
     <>
+    
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/Contact" element={<Contact />} />
-        <Route path="/Admin" element={<Admin />} />
         <Route path="/SignUp" element={<SignUp />} />
         <Route path="/Login" element={<Login />} />
         <Route path="/EmailTemp" element={<EmailTemp />} />
@@ -32,7 +42,12 @@ function App() {
         <Route path="/Counter" element={<Counter />} />
         <Route path="/forgotPassword" element={<ForgotPassword />} />
         <Route path='/AddProduct' element={<AddProduct/>}/>
-        <Route path='/customerdashboard' element={<CustomerDashboard/>}/>
+        <Route path='/customer/dashboard' element={<CustomerDashboard/>}/>
+        <Route path='/productdescription/:productId' element={<ProductDescription/>}/>
+        <Route path='/Users'element={<Users/>} />
+        <Route path="/edituser/:userId" element={<EditUser onUpdate={() => {}} />} />
+        <Route path='/admin/dashboard' element={<AdminDashboard/>}/>
+
       </Routes>
       <Footer />
     </>
@@ -73,5 +88,3 @@ export default App;
 // }
 
 // export default App;
-
-// App.js
