@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 
+<<<<<<< HEAD
 function authenticateWithToken(req, res, next) {
   try {
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
@@ -12,6 +13,27 @@ function authenticateWithToken(req, res, next) {
       jwt.verify(token, process.env.PRIVATE_KEY, (err, decoded) => {
         if (err) {
           return res.status(403).json({ message: 'You are not authorized' });
+=======
+// this is also works fine fix errors too,
+
+const authenticateWithToken = (req, res, next) => {
+    try {
+        if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
+            const token = req.headers.authorization.split(" ")[1];
+            // console.log(token); 
+            if (!token) {
+                res.status(403).json("denied because you are not authenticated, token missing");
+            }
+            jwt.verify(token, process.env.PRIVATE_KEY, (err, user) => {
+                if (err) {
+                    return res.status(403).json("you are not authorized");
+                }
+                req.user = user;
+                next();
+            });
+        } else {
+            res.status(403).json("you are not authorized, missing token or incorrect format");
+>>>>>>> f082497 (added comment message for partner)
         }
 
         if (decoded && decoded.role) {
