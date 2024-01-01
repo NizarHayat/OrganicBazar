@@ -14,13 +14,12 @@ function authenticateWithToken(req, res, next) {
           return res.status(403).json({ message: 'You are not authorized' });
         }
 
-        // Assuming roles are included in the token payload
-        if (decoded && decoded.user && decoded.user.role) {
-          req.userRole = decoded.user.role; // Set user role in the request object
+        if (decoded && decoded.role) {
+          req.userRole = decoded.role; // Set user role in the request object
+          next();
+        } else {
+          return res.status(403).json({ message: 'Invalid token payload - Role not found' });
         }
-
-        req.user = decoded.user; // Set user information in the request object
-        next();
       });
     } else {
       return res.status(401).json({ message: 'Access Denied, token missing' });

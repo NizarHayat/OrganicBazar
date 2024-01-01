@@ -2,11 +2,14 @@ const express = require('express');
 const router = express.Router();
 const controller = require('../controllers/user.controller.js');
 const authenticateWithToken = require('../middleware/authMiddleware.js');
-const { roleMiddleware } = require('../middleware/roleMiddleware.js'); // Import the roleMiddleware correctly
+const  roleMiddleware = require('../middleware/roleMiddleware.js'); // Import the roleMiddleware correctly
+
+
 
 router.post('/user', controller.createUser);
 router.post('/login', controller.login);
-router.get("/users", controller.getAllUsers);
+ router.get("/users",authenticateWithToken, roleMiddleware("admin"),controller.getAllUsers);
+// router.get("/admin/dashboard", authenticateWithToken, roleMiddleware('admin'), controller.adminDashboard);
 //authenticateWithToken, roleMiddleware
 
 router.get('/user/:id', controller.getSingleUser);
