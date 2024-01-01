@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+// this middleware works correctly oky nizar bhai I have fix the errors
 
 function authenticateWithToken(req, res, next) {
   try {

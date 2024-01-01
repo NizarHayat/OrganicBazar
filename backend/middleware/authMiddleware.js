@@ -1,5 +1,7 @@
 const jwt = require("jsonwebtoken");
 
+// this is also works fine fix errors too,
+
 const authenticateWithToken = (req, res, next) => {
     try {
         if (req.headers.authorization && req.headers.authorization.startsWith("Bearer")) {
