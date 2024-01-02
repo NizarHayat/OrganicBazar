@@ -2,12 +2,18 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSearch, faHeart, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
+import { useDispatch, useSelector } from 'react-redux';
 
 const Navbar = () => {
+  const dispatch = useDispatch();
+  const cartState = useSelector(state => state.cartReducer);
+
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
       <div className="container">
-        <Link className="navbar-brand" to="/">Organic Bazaar</Link>
+        <Link className="navbar-brand" to="/">
+          Organic Bazaar
+        </Link>
 
         <button
           className="navbar-toggler"
@@ -24,21 +30,30 @@ const Navbar = () => {
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav mx-auto align-items-center">
             <li className="nav-item ">
-              <Link className="nav-link text-light" to="/">Home</Link>
+              <Link className="nav-link text-light" to="/">
+                Home
+              </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link text-light" to="/contact">Contact</Link>
+              <Link className="nav-link text-light" to="/contact">
+                Contact
+              </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link text-light" to="/about">About</Link>
+              <Link className="nav-link text-light" to="/about">
+                About
+              </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link text-light" to="/signup">Signup</Link>
+              <Link className="nav-link text-light" to="/signup">
+                Signup
+              </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link text-light" to="/Login">Login</Link>
+              <Link className="nav-link text-light" to="/Login">
+                Login
+              </Link>
             </li>
-        
           </ul>
 
           <div className="d-flex align-items-center">
@@ -53,7 +68,7 @@ const Navbar = () => {
 
             <div className="nav-item ms-3">
               <Link className="nav-link text-light" to="/cart">
-                <FontAwesomeIcon icon={faShoppingCart} /> Cart
+                <FontAwesomeIcon icon={faShoppingCart} /> Cart {cartState.cartItems.length}
               </Link>
             </div>
 
