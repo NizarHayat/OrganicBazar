@@ -1,12 +1,15 @@
+// LatestProduct.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
+import { useCart } from '../Hooks/CustomHook'; // Adjust the path as needed
 
 const LatestProduct = () => {
   const [products, setProducts] = useState([]);
   const navigate = useNavigate();
+  const { addToCartHandler } = useCart();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -25,8 +28,6 @@ const LatestProduct = () => {
   const redirectToProduct = (productId) => {
     navigate(`/productdescription/${productId}`);
   };
-
-
 
   return (
     <div>
@@ -57,7 +58,7 @@ const LatestProduct = () => {
                 </button>
                 <button
                   className="btn btn-outline-secondary ms-2"
-             
+                  onClick={() => addToCartHandler(product)}
                 >
                   <FontAwesomeIcon icon={faShoppingCart} /> Add to Cart
                 </button>

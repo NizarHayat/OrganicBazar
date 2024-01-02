@@ -1,50 +1,22 @@
-import {
-    ADD_TO_CART,
-    REMOVE_CART_ITEM,
-    SAVE_SHIPPING_INFO,
-  } from "../constans/CartConstans";
-  
-  export const cartReducer = (
-    state = { cartItems: [], shippingInfo: {} },
-    action
-  ) => {
-    switch (action.type) {
-      case ADD_TO_CART:
-        const item = action.payload;
-     
-        const isItemExist = state.cartItems.find(
-          (i) => i.product === item.product
-        );
+// cartReducer.js
+const initialState = {
+  cartItems: [],
+};
 
-        if (isItemExist) {
-          return {
-            ...state,
-            cartItems: state.cartItems.map((i) =>
-              i.product === isItemExist.product ? item : i
-            ),
-          };
-        } else {
-          return {
-            ...state,
-            cartItems: [...state.cartItems, item],
-          };
-      }
-
-      case REMOVE_CART_ITEM:
-        return {
-          ...state,
-          cartItems: state.cartItems.filter((i) => i.product !== action.payload),
-        };
-  
-      case SAVE_SHIPPING_INFO:
-        return {
-          ...state,
-          shippingInfo: action.payload,
-        };
-  
-      default:
-        return state;
-
-    }
-  };
-
+export const cartReducer = (state = initialState, action) => {
+  switch (action.type) {
+    case 'ADD_TO_CART':
+      return {
+        ...state,
+        cartItems: [...state.cartItems, action.payload],
+      };
+      case 'REMOVE_FROM_CART':
+      return {
+        ...state,
+        cartItems: state.cartItems.filter(item => item._id !== action.payload),
+      };
+   
+    default:
+      return state;
+  }
+};

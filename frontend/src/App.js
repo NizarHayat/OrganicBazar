@@ -18,6 +18,7 @@ import ProductDescription from './components/ProductDescription';
 import Users from './components/Users';
 import EditUser from './components/EditUser';
 import AdminDashboard from './components/Dashboard/AdminDashboard';
+import Cart from './components/Cart';
 
 
 
@@ -47,6 +48,7 @@ function App() {
         <Route path='/Users'element={<Users/>} />
         <Route path="/edituser/:userId" element={<EditUser onUpdate={() => {}} />} />
         <Route path='/admin/dashboard' element={<AdminDashboard/>}/>
+        <Route path="/cart" element={<Cart />} />
 
       </Routes>
       <Footer />
