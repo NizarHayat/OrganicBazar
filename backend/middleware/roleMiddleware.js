@@ -1,37 +1,28 @@
 const jwt = require('jsonwebtoken');
+// this middleware works correctly oky nizar bhai I have fix the errors
 
-function authenticateWithToken(req, res, next) {
-  try {
-    if (
-      req.headers.authorization &&
-      req.headers.authorization.startsWith("Bearer")
-    ) {
-      let token = req.headers.authorization.split(" ")[1];
 
-      if (!token) {
-        return res.status(401).json({ message: "Access Denied, token missing" });
+
+
+function roleMiddleware(requiredRole) {
+  return function(req, res, next) {
+    try {
+      console.log("Required Role:", requiredRole);
+      console.log("User Role:", req.userRole);
+      console.log("Decoded Token payload:",req.user);
+      if (!req.userRole || req.userRole !== requiredRole) {
+        console.log("insufficient permissions");
+        return res.status(403).json({ message: "Insufficient permissions" });
       }
-
-      jwt.verify(token, process.env.PRIVATE_KEY, (err, decoded) => {
-        if (err) {
-          return res.status(403).json({ message: "You are not authorized" });
-        }
-        
-        // Assuming roles are included in the token payload
-        if (decoded && decoded.user && decoded.user.role) {
-          req.userRole = decoded.user.role; // Set user role in request object
-        }
-
-        req.user = decoded.user; // Set user information in request object
-        next();
-      });
-    } else {
-      return res.status(401).json({ message: "Access Denied, token missing" });
+      // If the user has the required role, proceed to the next middleware/controller
+      console.log("premission granted");
+      next();
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: "Internal server error" });
     }
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: "Internal server error" });
-  }
+  };
 }
 
-module.exports = authenticateWithToken;
+module.exports = roleMiddleware;
+
