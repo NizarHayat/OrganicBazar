@@ -58,39 +58,26 @@ const updateProductById = async (req, res) => {
             return res.status(404).json({ message: 'Product not found' });
         }
 
-     
-        if (req.body.name != null) {
-            product.name = req.body.name;
-        }
-        if (req.body.title != null) {
-            product.title = req.body.title;
-        }
-        if (req.body.description != null) {
-            product.description = req.body.description;
-        }
-        if (req.body.price != null) {
-            product.price = req.body.price;
-        }
-        if (req.body.category != null) {
-            product.category = req.body.category;
-        }
-        if (req.body.stock != null) {
-            product.stock = req.body.stock;
-        }
+        // Update product fields
+        product.title = req.body.title || product.title;
+        product.description = req.body.description || product.description;
+        product.price = req.body.price || product.price;
+        product.category = req.body.category || product.category;
+        product.stock = req.body.stock || product.stock;
 
         // Handle the image file separately
-        if (req.body.image != null) {
-            // Update the image path in the product
-            product.image = req.body.image;
+        if (req.file) {
+            const imageBuffer = req.file.buffer;
+            product.image = imageBuffer.toString('base64');
         }
 
-     
         const updatedProduct = await product.save();
         res.json(updatedProduct);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
 };
+
 
 
 

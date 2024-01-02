@@ -12,10 +12,8 @@ router.use("/contact", contactRoute);
 router.use("/", userRoute);
 router.use("/email", emailRoute);
 router.use('/uploads', imageRoute);
-
-// Ensure that the '/products/:id' route is defined after '/products'
-router.use('/', productRoute);
-router.use('/', cartRoute);
+router.use('/product', productRoute);
+router.use('/cart', cartRoute);
 
 
 

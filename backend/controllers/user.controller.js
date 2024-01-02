@@ -216,10 +216,16 @@ exports.getSingleUser = async (req, res) => {
 // };
 
 // Update user
+// Update user
 exports.updateUserById = async (req, res) => {
   try {
-    const userId = req.params.id; // Assuming the user ID is passed as a parameter in the URL
-    const updateData = req.body; // Data to update the user (assuming it's sent in the request body)
+    const userId = req.params.id;
+    const updateData = req.body;
+
+    // Ensure the _id is not included in the updateData to prevent errors
+    if (updateData._id) {
+      delete updateData._id;
+    }
 
     const updatedUser = await User.findByIdAndUpdate(userId, updateData, { new: true });
 
@@ -227,12 +233,14 @@ exports.updateUserById = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    res.status(200).json(updatedUser); // Return the updated user
+    res.status(200).json(updatedUser);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
   }
 };
+
+
 
 // Delete a user 
 exports.deleteUserById = async (req, res) => {

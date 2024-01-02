@@ -14,7 +14,7 @@ const LatestProduct = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/products');
+        const response = await axios.get('http://localhost:3001/product/products');
         const driedFruits = response.data.filter((product) => product.category === 'Dried Fruits');
         setProducts(driedFruits);
       } catch (error) {
